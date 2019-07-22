@@ -11,6 +11,7 @@
     "require": {
         "topthink/framework": "5.1.*"
     },
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "think\\throttle\\": "src/"
