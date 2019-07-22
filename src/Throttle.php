@@ -11,17 +11,15 @@
 
 namespace think\middleware;
 
-use think\Cache;
+use think\facade\Cache;
 use think\facade\Request;
 
 class Throttle
 {
-    protected $cache;
     protected $ip;
 
-    public function __construct(Cache $cache)
+    public function __construct()
     {
-        $this->cache = $cache;
         $this->ip = Request::ip();
     }
 
@@ -44,7 +42,7 @@ class Throttle
      */
     public  function tooManyAttempts($key, $maxAttempts, $decayMinutes = 1){
         if ($this->attempts($key) >= $maxAttempts) {
-            if ($this->cache->has($key.':timer')) {
+            if (Cache::has($key.':timer')) {
                 return true;
             }
             $this->resetAttempts($key);
@@ -62,15 +60,15 @@ class Throttle
      */
     public function hit($key, $decayMinutes = 1)
     {
-        if (!($this->cache->has($key.':timer'))){
-            $this->cache->set($key.':timer', (time() + $decayMinutes*60), $decayMinutes*60);
+        if (!(Cache::has($key.':timer'))){
+            Cache::set($key.':timer', (time() + $decayMinutes*60), $decayMinutes*60);
         }
 
-        $added = $this->cache->get($key);
-        $hits = (int)$this->cache->set($key, $added + 1, $decayMinutes*60);
+        $added = Cache::get($key);
+        $hits = (int)Cache::set($key, $added + 1, $decayMinutes*60);
 
         if (! $added && $hits == 1) {
-            $this->cache->set($key, 1, $decayMinutes*60);
+            Cache::set($key, 1, $decayMinutes*60);
         }
 
         return $hits;
@@ -84,7 +82,7 @@ class Throttle
      */
     public function resetAttempts($key)
     {
-        return $this->cache->rm($key);
+        return Cache::rm($key);
     }
 
     /**
@@ -95,6 +93,6 @@ class Throttle
      */
     public function attempts($key)
     {
-        return $this->cache->get($key, 0);
+        return Cache::get($key, 0);
     }
 }
