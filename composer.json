@@ -14,7 +14,7 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "think\\throttle\\": "src/"
+            "think\\middleware": "src/"
         }
     }
 }
