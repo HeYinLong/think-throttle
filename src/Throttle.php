@@ -9,7 +9,7 @@
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
 
-namespace think\middleware;
+namespace think\throttle;
 
 use think\facade\Cache;
 use think\facade\Request;
